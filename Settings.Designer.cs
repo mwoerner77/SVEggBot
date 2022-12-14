@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SVAutoHatch {
+namespace SVEggBot {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
