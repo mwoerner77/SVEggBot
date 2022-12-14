@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SVAutoHatch" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SwitchIP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">192.168.0.0</Value>
+    </Setting>
+    <Setting Name="StartingBox" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">24</Value>
+    </Setting>
+    <Setting Name="CfgBaseDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="CfgOpenHome" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2800</Value>
+    </Setting>
+    <Setting Name="CfgCloseGame" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+    <Setting Name="CfgStartPicnic" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9000</Value>
+    </Setting>
+    <Setting Name="CfgSandwichRightPresses" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CfgSandwichDownPresses" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="CfgPreSandwichForwardWalk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="CfgBasketLeftWalk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">850</Value>
+    </Setting>
+    <Setting Name="CfgBasketForwardWalk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2000</Value>
+    </Setting>
+    <Setting Name="CfgBasketRightWalk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1750</Value>
+    </Setting>
+    <Setting Name="CfgBasketBackWalk" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CfgSandwichStart" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8000</Value>
+    </Setting>
+    <Setting Name="CfgSandwichIngredientDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
