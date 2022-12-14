@@ -1,4 +1,4 @@
-namespace SVAutoHatch
+namespace SVEggBot
 {
     using PKHeX.Core;
     using SysBot.Base;
@@ -43,6 +43,7 @@ namespace SVAutoHatch
                     ButtonStopPicnic.Enabled = false;
                     RecipeDownCountInput.Enabled = true;
                     RecipeRightCountInput.Enabled = true;
+                    StartingBoxNumberInput.Enabled = true;
                 }
                 catch (SocketException err)
                 {
@@ -173,6 +174,7 @@ namespace SVAutoHatch
                             ButtonStopPicnic.Enabled = false;
                             RecipeDownCountInput.Enabled = true;
                             RecipeRightCountInput.Enabled = true;
+                            StartingBoxNumberInput.Enabled = true;
                             ConnectionStatusText.Text = "Stopped Picnic";
                             return;
                         }
@@ -185,6 +187,7 @@ namespace SVAutoHatch
                         ButtonStopPicnic.Enabled = false;
                         RecipeDownCountInput.Enabled = true;
                         RecipeRightCountInput.Enabled = true;
+                        StartingBoxNumberInput.Enabled = true;
                         ConnectionStatusText.Text = "Stopped Picnic";
                         return;
                     }
@@ -206,6 +209,7 @@ namespace SVAutoHatch
             ButtonStopPicnic.Enabled = false;
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
+            StartingBoxNumberInput.Enabled = true;
             ConnectionStatusText.Text = "Stopped Picnic";
         }
 
@@ -246,6 +250,7 @@ namespace SVAutoHatch
                 ButtonStopPicnic.Enabled = true;
                 RecipeDownCountInput.Enabled = false;
                 RecipeRightCountInput.Enabled = false;
+                StartingBoxNumberInput.Enabled = false;
                 StartPicnic(CancellationToken.None);
             }
         }
@@ -260,6 +265,7 @@ namespace SVAutoHatch
             ButtonStopPicnic.Enabled = false;
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
+            StartingBoxNumberInput.Enabled = true;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -267,12 +273,14 @@ namespace SVAutoHatch
             InputSwitchIP.Text = Settings.Default.SwitchIP;
             RecipeDownCountInput.Value = Settings.Default.CfgSandwichDownPresses;
             RecipeRightCountInput.Value = Settings.Default.CfgSandwichRightPresses;
+            StartingBoxNumberInput.Value = Settings.Default.StartingBox;
             ButtonConnect.Enabled = true;
             ButtonDisconnect.Enabled = false;
             ButtonStartPicnic.Enabled = false;
             ButtonStopPicnic.Enabled = false;
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
+            StartingBoxNumberInput.Enabled = true;
         }
 
         private void RecipeRightCountInput_ValueChanged(object sender, EventArgs e)
@@ -296,6 +304,13 @@ namespace SVAutoHatch
                 StopPicnicFlag = true;
                 ConnectionStatusText.Text = "Attempting to Stop Picnic";
             }
+        }
+
+        private void StartingBoxNumberInput_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.StartingBox = (int)numericUpDown.Value;
+            Settings.Default.Save();
         }
     }
 }

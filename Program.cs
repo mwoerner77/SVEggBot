@@ -1,4 +1,4 @@
-namespace SVAutoHatch
+namespace SVEggBot
 {
     internal static class Program
     {

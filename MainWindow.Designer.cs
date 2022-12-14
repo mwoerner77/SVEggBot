@@ -1,4 +1,4 @@
-﻿namespace SVAutoHatch
+﻿namespace SVEggBot
 {
     partial class MainWindow
     {
@@ -40,8 +40,11 @@
             this.RecipeDownCountLabel = new System.Windows.Forms.Label();
             this.RecipeRightCountInput = new System.Windows.Forms.NumericUpDown();
             this.RecipeDownCountInput = new System.Windows.Forms.NumericUpDown();
+            this.StartingBoxNumberLabel = new System.Windows.Forms.Label();
+            this.StartingBoxNumberInput = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.RecipeRightCountInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RecipeDownCountInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartingBoxNumberInput)).BeginInit();
             this.SuspendLayout();
             // 
             // LabelSwitchIP
@@ -123,7 +126,7 @@
             // RecipeRightCountLabel
             // 
             this.RecipeRightCountLabel.AutoSize = true;
-            this.RecipeRightCountLabel.Location = new System.Drawing.Point(28, 133);
+            this.RecipeRightCountLabel.Location = new System.Drawing.Point(31, 133);
             this.RecipeRightCountLabel.Name = "RecipeRightCountLabel";
             this.RecipeRightCountLabel.Size = new System.Drawing.Size(129, 15);
             this.RecipeRightCountLabel.TabIndex = 8;
@@ -159,11 +162,45 @@
             this.RecipeDownCountInput.TabIndex = 11;
             this.RecipeDownCountInput.ValueChanged += new System.EventHandler(this.RecipeDownCountInput_ValueChanged);
             // 
+            // StartingBoxNumberLabel
+            // 
+            this.StartingBoxNumberLabel.AutoSize = true;
+            this.StartingBoxNumberLabel.Location = new System.Drawing.Point(79, 193);
+            this.StartingBoxNumberLabel.Name = "StartingBoxNumberLabel";
+            this.StartingBoxNumberLabel.Size = new System.Drawing.Size(81, 15);
+            this.StartingBoxNumberLabel.TabIndex = 12;
+            this.StartingBoxNumberLabel.Text = "Starting Box #";
+            // 
+            // StartingBoxNumberInput
+            // 
+            this.StartingBoxNumberInput.Location = new System.Drawing.Point(163, 191);
+            this.StartingBoxNumberInput.Maximum = new decimal(new int[] {
+            32,
+            0,
+            0,
+            0});
+            this.StartingBoxNumberInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.StartingBoxNumberInput.Name = "StartingBoxNumberInput";
+            this.StartingBoxNumberInput.Size = new System.Drawing.Size(75, 23);
+            this.StartingBoxNumberInput.TabIndex = 13;
+            this.StartingBoxNumberInput.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.StartingBoxNumberInput.ValueChanged += new System.EventHandler(this.StartingBoxNumberInput_ValueChanged);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(268, 205);
+            this.ClientSize = new System.Drawing.Size(268, 235);
+            this.Controls.Add(this.StartingBoxNumberInput);
+            this.Controls.Add(this.StartingBoxNumberLabel);
             this.Controls.Add(this.RecipeDownCountInput);
             this.Controls.Add(this.RecipeRightCountInput);
             this.Controls.Add(this.RecipeDownCountLabel);
@@ -181,6 +218,7 @@
             this.Load += new System.EventHandler(this.MainWindow_Load);
             ((System.ComponentModel.ISupportInitialize)(this.RecipeRightCountInput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RecipeDownCountInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.StartingBoxNumberInput)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,5 +238,7 @@
         private Label RecipeDownCountLabel;
         private NumericUpDown RecipeRightCountInput;
         private NumericUpDown RecipeDownCountInput;
+        private Label StartingBoxNumberLabel;
+        private NumericUpDown StartingBoxNumberInput;
     }
 }

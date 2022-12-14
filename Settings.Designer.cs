@@ -37,7 +37,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int StartingBox {
             get {
                 return ((int)(this["StartingBox"]));
@@ -97,7 +97,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int CfgSandwichRightPresses {
             get {
                 return ((int)(this["CfgSandwichRightPresses"]));
@@ -109,7 +109,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int CfgSandwichDownPresses {
             get {
                 return ((int)(this["CfgSandwichDownPresses"]));

@@ -1,4 +1,4 @@
-﻿namespace SVAutoHatch
+﻿namespace SVEggBot
 {
     using PKHeX.Core;
     using SysBot.Base;
