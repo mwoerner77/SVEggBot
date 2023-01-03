@@ -11,6 +11,7 @@ namespace SVEggBot
         private readonly static SwitchSocketAsync SwitchConnection = new(Config);
         private readonly static OffsetUtil OffsetUtil = new(SwitchConnection);
         private bool StopPicnicFlag = false;
+        private int SlotsRead = 0;
 
         public MainWindow()
         {
@@ -44,6 +45,11 @@ namespace SVEggBot
                     RecipeDownCountInput.Enabled = true;
                     RecipeRightCountInput.Enabled = true;
                     StartingBoxNumberInput.Enabled = true;
+                    TestSandwichMaking.Enabled = true;
+                    TestBasketWalk.Enabled = true;
+                    TestPicnicSetup.Enabled = true;
+                    TestBasketDialog.Enabled = true;
+                    TestGameReset.Enabled = true;
                 }
                 catch (SocketException err)
                 {
@@ -116,70 +122,26 @@ namespace SVEggBot
 
         private async Task StartPicnic(CancellationToken token)
         {
-            int BaseDelay = 0_550 + (int)Settings.Default.CfgBaseDelay;
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
             await Click(LSTICK, BaseDelay, token).ConfigureAwait(false); // Sometimes it seems like the first command doesn't go through so send this just in case
 
             while (!StopPicnicFlag)
             {
                 // Start Picnic
-                await Click(X, BaseDelay, token).ConfigureAwait(false);
-                await Click(DRIGHT, BaseDelay, token).ConfigureAwait(false);
-                await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
-                await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + (int)Settings.Default.CfgStartPicnic, token).ConfigureAwait(false);
+                await SetupPicnic(token).ConfigureAwait(false);
                 if (StopPicnicFlag) break;
 
                 // Make Sandwich
-                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgPreSandwichForwardWalk, BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 3_500, token).ConfigureAwait(false);
-                for (int i = 0; i < (int)Settings.Default.CfgSandwichRightPresses; i++) await Click(DRIGHT, BaseDelay, token).ConfigureAwait(false);
-                for (int i = 0; i < (int)Settings.Default.CfgSandwichDownPresses; i++) await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + (int)Settings.Default.CfgSandwichStart, token).ConfigureAwait(false);
-                if (StopPicnicFlag) break;
-
-                for (int i = 0; i < 3; i++)
-                {
-                    await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
-                    await Hold(A, BaseDelay, token).ConfigureAwait(false);
-                    await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Down, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
-                    await Release(A, BaseDelay, token).ConfigureAwait(false);
-                    if (StopPicnicFlag) break;
-                }
-
-                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 1_500, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 8_500, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 22_500, token).ConfigureAwait(false);
-                await Click(A, BaseDelay, token).ConfigureAwait(false);
+                await MakeSandwich(token).ConfigureAwait(false);
                 if (StopPicnicFlag) break;
 
                 // Walk to Basket and get eggs
-                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Left, (int)Settings.Default.CfgBasketLeftWalk, BaseDelay, token).ConfigureAwait(false);
-                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgBasketForwardWalk, BaseDelay, token).ConfigureAwait(false);
-                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Right, (int)Settings.Default.CfgBasketRightWalk, BaseDelay, token).ConfigureAwait(false);
-                //await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Down, (int)Settings.Default.CfgBasketBackWalk, BaseDelay, token).ConfigureAwait(false);
+                await WalkToBasket(token).ConfigureAwait(false);
                 if (StopPicnicFlag) break;
 
                 for (int i = 0; i < 9; i++)
                 {
-                    await Click(A, 0_750, token).ConfigureAwait(false);
-                    for (int j = 0; j < 75; j++)
-                    {
-                        if (StopPicnicFlag)
-                        {
-                            StopPicnicFlag = false;
-                            ButtonStartPicnic.Enabled = true;
-                            ButtonStopPicnic.Enabled = false;
-                            RecipeDownCountInput.Enabled = true;
-                            RecipeRightCountInput.Enabled = true;
-                            StartingBoxNumberInput.Enabled = true;
-                            ConnectionStatusText.Text = "Stopped Picnic";
-                            return;
-                        }
-                        await Click(B, 0_750, token).ConfigureAwait(false);
-                    }
+                    await BasketDialog(token).ConfigureAwait(false);
                     if (StopPicnicFlag || await TestForShiny(token).ConfigureAwait(false))
                     {
                         StopPicnicFlag = false;
@@ -188,20 +150,20 @@ namespace SVEggBot
                         RecipeDownCountInput.Enabled = true;
                         RecipeRightCountInput.Enabled = true;
                         StartingBoxNumberInput.Enabled = true;
+                        TestSandwichMaking.Enabled = true;
+                        TestBasketWalk.Enabled = true;
+                        TestPicnicSetup.Enabled = true;
+                        TestBasketDialog.Enabled = true;
+                        TestGameReset.Enabled = true;
                         ConnectionStatusText.Text = "Stopped Picnic";
                         return;
                     }
-                    await Click(B, 150_000, token).ConfigureAwait(false);
+
+                    await Click(B, (int)Settings.Default.CfgBasketTimeBetweenChecks, token).ConfigureAwait(false);
                 }
 
                 // HOME Menu
-                await Click(HOME, (int)Settings.Default.CfgOpenHome + BaseDelay, token).ConfigureAwait(false);
-                await Click(X, BaseDelay + 1_000, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
-                await Click(A, (int)Settings.Default.CfgCloseGame + BaseDelay, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 20_000, token).ConfigureAwait(false);
-                await Click(A, BaseDelay + 20_000, token).ConfigureAwait(false);
+                await RestartGame(token).ConfigureAwait(false);
             }
 
             StopPicnicFlag = false;
@@ -210,11 +172,97 @@ namespace SVEggBot
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
             StartingBoxNumberInput.Enabled = true;
+            TestSandwichMaking.Enabled = true;
+            TestBasketWalk.Enabled = true;
+            TestPicnicSetup.Enabled = true;
+            TestBasketDialog.Enabled = true;
+            TestGameReset.Enabled = true;
             ConnectionStatusText.Text = "Stopped Picnic";
+        }
+
+        private async Task SetupPicnic(CancellationToken token)
+        {
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, 100, BaseDelay, token).ConfigureAwait(false);
+            await Click(L, BaseDelay, token).ConfigureAwait(false);
+            await Click(X, BaseDelay, token).ConfigureAwait(false);
+            await Click(DRIGHT, BaseDelay, token).ConfigureAwait(false);
+            await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
+            await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + (int)Settings.Default.CfgStartPicnic, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgPreSandwichForwardWalk, BaseDelay, token).ConfigureAwait(false);
+        }
+
+        private async Task MakeSandwich(CancellationToken token)
+        {
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
+            await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 3_500, token).ConfigureAwait(false);
+            for (int i = 0; i < (int)Settings.Default.CfgSandwichRightPresses; i++) await Click(DRIGHT, BaseDelay, token).ConfigureAwait(false);
+            for (int i = 0; i < (int)Settings.Default.CfgSandwichDownPresses; i++) await Click(DDOWN, BaseDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + (int)Settings.Default.CfgSandwichStart, token).ConfigureAwait(false);
+            for (int i = 0; i < 3; i++)
+            {
+                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
+                await Hold(A, BaseDelay, token).ConfigureAwait(false);
+                await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Down, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
+                await Release(A, BaseDelay, token).ConfigureAwait(false);
+            }
+
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgSandwichIngredientDistance, BaseDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 1_500, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 8_500, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 22_500, token).ConfigureAwait(false);
+            await Click(A, BaseDelay, token).ConfigureAwait(false);
+        }
+
+        private async Task WalkToBasket(CancellationToken token)
+        {
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Left, 100, BaseDelay, token).ConfigureAwait(false);
+            await Click(L, BaseDelay, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgBasketLeftWalk, BaseDelay, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Right, 100, BaseDelay, token).ConfigureAwait(false);
+            await Click(L, BaseDelay, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgBasketForwardWalk, BaseDelay, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Right, 100, BaseDelay, token).ConfigureAwait(false);
+            await Click(L, BaseDelay, token).ConfigureAwait(false);
+            await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Up, (int)Settings.Default.CfgBasketRightWalk, BaseDelay, token).ConfigureAwait(false);
+            //await HoldStickInDirection(SwitchStick.LEFT, StickDirection.Down, (int)Settings.Default.CfgBasketBackWalk, BaseDelay, token).ConfigureAwait(false);
+        }
+
+        private async Task RestartGame(CancellationToken token)
+        {
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
+            await Click(HOME, (int)Settings.Default.CfgOpenHome + BaseDelay, token).ConfigureAwait(false);
+            await Click(X, BaseDelay + 1_000, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
+            await Click(A, (int)Settings.Default.CfgCloseGame + BaseDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + 1_000, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + (int)Settings.Default.CfgGameStartDelay, token).ConfigureAwait(false);
+            await Click(A, BaseDelay + (int)Settings.Default.CfgGameStartDelay, token).ConfigureAwait(false);
+        }
+
+        private async Task BasketDialog(CancellationToken token)
+        {
+            int BaseDelay = (int)Settings.Default.CfgBaseDelay;
+            await Click(A, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            for (int i = 0; i < 45; i++)
+            {
+                await Click(A, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            }
+
+            await Click(B, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            await Click(B, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            await Click(B, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            await Click(B, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
+            await Click(B, BaseDelay + (int)Settings.Default.CfgBasketDialogInputDelay, token).ConfigureAwait(false);
         }
 
         private async Task<bool> TestForShiny(CancellationToken token)
         {
+            int startingSlot = this.SlotsRead;
             int slotSize = 344;
             int boxSize = 30 * slotSize;
             int startingBox = (int)Settings.Default.StartingBox;
@@ -222,14 +270,29 @@ namespace SVEggBot
             var box1Start = await OffsetUtil.GetPointerAddress(Offsets.Box1Slot1Pointer, CancellationToken.None);
             for (int i = 0; i < 3; i++)
             {
-                boxIndex = (boxIndex + i) % 32;
-                var boxStart = box1Start + (ulong)(boxIndex * boxSize);
-                for (int j = 0; j < 30; j++)
+                if (startingSlot < (i + 1) * 30)
                 {
-                    var slotData = await SwitchConnection.ReadBytesAbsoluteAsync(boxStart + (ulong)(j * slotSize), slotSize, token);
-                    PK9 slotPKM = new PK9(PokeCrypto.DecryptArray9(slotData));
-                    if (slotPKM.IsShiny && slotPKM.PID != 0)
-                        return true;
+                    boxIndex = (boxIndex + i) % 32;
+                    var boxStart = box1Start + (ulong)(boxIndex * boxSize);
+                    for (int j = 0; j < 30; j++)
+                    {
+                        if (startingSlot < i * 30 + j)
+                        {
+                            var slotData = await SwitchConnection.ReadBytesAbsoluteAsync(boxStart + (ulong)(j * slotSize), slotSize, token);
+                            PK9 slotPKM = new PK9(PokeCrypto.DecryptArray9(slotData));
+                            if (slotPKM.PID != 0)
+                            {
+                                this.SlotsRead++;
+                                if (slotPKM.IsShiny)
+                                    return true;
+                            }
+
+                            if (startingSlot + 10 >= i * 30 + j)
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -251,6 +314,11 @@ namespace SVEggBot
                 RecipeDownCountInput.Enabled = false;
                 RecipeRightCountInput.Enabled = false;
                 StartingBoxNumberInput.Enabled = false;
+                TestSandwichMaking.Enabled = false;
+                TestBasketWalk.Enabled = false;
+                TestPicnicSetup.Enabled = false;
+                TestBasketDialog.Enabled = false;
+                TestGameReset.Enabled = false;
                 StartPicnic(CancellationToken.None);
             }
         }
@@ -266,6 +334,11 @@ namespace SVEggBot
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
             StartingBoxNumberInput.Enabled = true;
+            TestSandwichMaking.Enabled = false;
+            TestBasketWalk.Enabled = false;
+            TestPicnicSetup.Enabled = false;
+            TestBasketDialog.Enabled = false;
+            TestGameReset.Enabled = false;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -274,6 +347,20 @@ namespace SVEggBot
             RecipeDownCountInput.Value = Settings.Default.CfgSandwichDownPresses;
             RecipeRightCountInput.Value = Settings.Default.CfgSandwichRightPresses;
             StartingBoxNumberInput.Value = Settings.Default.StartingBox;
+            BaseInputDelay.Value = Settings.Default.CfgBaseDelay;
+            HomeMenuDelay.Value = Settings.Default.CfgOpenHome;
+            CloseGameDelay.Value = Settings.Default.CfgCloseGame;
+            PicnicStartDelay.Value = Settings.Default.CfgStartPicnic;
+            SandwichIngredientTravelTime.Value = Settings.Default.CfgSandwichIngredientDistance;
+            WalkToTableTime.Value = Settings.Default.CfgPreSandwichForwardWalk;
+            WalkToBasketLeft.Value = Settings.Default.CfgBasketLeftWalk;
+            WalkToBasketForward.Value = Settings.Default.CfgBasketForwardWalk;
+            WalkToBasketRight.Value = Settings.Default.CfgBasketRightWalk;
+            GameStartupDelay.Value = Settings.Default.CfgGameStartDelay;
+            SandwichStartTime.Value = Settings.Default.CfgSandwichStart;
+            BasketDialogInputDelay.Value = Settings.Default.CfgBasketDialogInputDelay;
+            BasketAPresses.Value = Settings.Default.CfgBasketAPresses;
+            TimeBetweenBasketChecks.Value = Settings.Default.CfgBasketTimeBetweenChecks;
             ButtonConnect.Enabled = true;
             ButtonDisconnect.Enabled = false;
             ButtonStartPicnic.Enabled = false;
@@ -281,6 +368,11 @@ namespace SVEggBot
             RecipeDownCountInput.Enabled = true;
             RecipeRightCountInput.Enabled = true;
             StartingBoxNumberInput.Enabled = true;
+            TestSandwichMaking.Enabled = false;
+            TestBasketWalk.Enabled = false;
+            TestPicnicSetup.Enabled = false;
+            TestBasketDialog.Enabled = false;
+            TestGameReset.Enabled = false;
         }
 
         private void RecipeRightCountInput_ValueChanged(object sender, EventArgs e)
@@ -311,6 +403,129 @@ namespace SVEggBot
             NumericUpDown numericUpDown = (NumericUpDown)sender;
             Settings.Default.StartingBox = (int)numericUpDown.Value;
             Settings.Default.Save();
+        }
+
+        private void baseInputDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBaseDelay = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void homeMenuDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgOpenHome = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void CloseGameDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgCloseGame = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void PicnicStartDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgStartPicnic = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void SandwichIngredientTravelTime_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgSandwichIngredientDistance = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void WalkToTableTime_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgPreSandwichForwardWalk = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void WalkToBasketLeft_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketLeftWalk = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void WalkToBasketForward_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketForwardWalk = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void WalkToBasketRight_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketRightWalk = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void GameStartupDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgGameStartDelay = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void SandwichStartTime_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgSandwichStart = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void TestSandwichMaking_Click(object sender, EventArgs e)
+        {
+            MakeSandwich(CancellationToken.None);
+        }
+
+        private void TestBasketWalk_Click(object sender, EventArgs e)
+        {
+            WalkToBasket(CancellationToken.None);
+        }
+
+        private void TestPicnicSetup_Click(object sender, EventArgs e)
+        {
+            SetupPicnic(CancellationToken.None);
+        }
+
+        private void TestGameReset_Click(object sender, EventArgs e)
+        {
+            RestartGame(CancellationToken.None);
+        }
+
+        private void BasketDialogInputDelay_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketDialogInputDelay = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void BasketAPresses_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketAPresses = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void TimeBetweenBasketChecks_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDown numericUpDown = (NumericUpDown)sender;
+            Settings.Default.CfgBasketTimeBetweenChecks = (int)numericUpDown.Value;
+            Settings.Default.Save();
+        }
+
+        private void TestBasketDialog_Click(object sender, EventArgs e)
+        {
+            BasketDialog(CancellationToken.None);
         }
     }
 }

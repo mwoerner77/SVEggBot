@@ -9,7 +9,7 @@
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="CfgBaseDelay" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">100</Value>
+      <Value Profile="(Default)">650</Value>
     </Setting>
     <Setting Name="CfgOpenHome" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2800</Value>
@@ -30,13 +30,13 @@
       <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="CfgBasketLeftWalk" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">850</Value>
+      <Value Profile="(Default)">950</Value>
     </Setting>
     <Setting Name="CfgBasketForwardWalk" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2000</Value>
+      <Value Profile="(Default)">1550</Value>
     </Setting>
     <Setting Name="CfgBasketRightWalk" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1750</Value>
+      <Value Profile="(Default)">600</Value>
     </Setting>
     <Setting Name="CfgBasketBackWalk" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
@@ -46,6 +46,18 @@
     </Setting>
     <Setting Name="CfgSandwichIngredientDistance" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="CfgGameStartDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20000</Value>
+    </Setting>
+    <Setting Name="CfgBasketAPresses" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="CfgBasketDialogInputDelay" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="CfgBasketTimeBetweenChecks" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">150</Value>
     </Setting>
   </Settings>
 </SettingsFile>

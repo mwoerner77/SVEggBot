@@ -49,7 +49,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        [global::System.Configuration.DefaultSettingValueAttribute("650")]
         public int CfgBaseDelay {
             get {
                 return ((int)(this["CfgBaseDelay"]));
@@ -133,7 +133,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("850")]
+        [global::System.Configuration.DefaultSettingValueAttribute("950")]
         public int CfgBasketLeftWalk {
             get {
                 return ((int)(this["CfgBasketLeftWalk"]));
@@ -145,7 +145,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1550")]
         public int CfgBasketForwardWalk {
             get {
                 return ((int)(this["CfgBasketForwardWalk"]));
@@ -157,7 +157,7 @@ namespace SVEggBot {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1750")]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
         public int CfgBasketRightWalk {
             get {
                 return ((int)(this["CfgBasketRightWalk"]));
@@ -200,6 +200,54 @@ namespace SVEggBot {
             }
             set {
                 this["CfgSandwichIngredientDistance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20000")]
+        public int CfgGameStartDelay {
+            get {
+                return ((int)(this["CfgGameStartDelay"]));
+            }
+            set {
+                this["CfgGameStartDelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int CfgBasketAPresses {
+            get {
+                return ((int)(this["CfgBasketAPresses"]));
+            }
+            set {
+                this["CfgBasketAPresses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int CfgBasketDialogInputDelay {
+            get {
+                return ((int)(this["CfgBasketDialogInputDelay"]));
+            }
+            set {
+                this["CfgBasketDialogInputDelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("150")]
+        public int CfgBasketTimeBetweenChecks {
+            get {
+                return ((int)(this["CfgBasketTimeBetweenChecks"]));
+            }
+            set {
+                this["CfgBasketTimeBetweenChecks"] = value;
             }
         }
     }
