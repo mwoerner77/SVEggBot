@@ -31,9 +31,9 @@ Sysbot is required to use this program. For more information on how to install s
  * Sandwich Ingredient travel time: Time to move cursor to ingredients (and also back to the sandwich).
  * Walk to table time: Time to walk forward to the table after starting the picnic.
  * Basket Walk Delays: Walking to the basket is performed by walking to the left of the table, forward to the end of the table, and then right to the basket.
-  * Walk to basket time part 1 (facing left): Time needed to go past left end of the table.
-  * Walk to basket time part 2 (facing forward): Time needed to walk to the other end of the table.
-  * Walk to basket time part 3 (facing right): Time needed to walk from the last step to the basket.
+   * Walk to basket time part 1 (facing left): Time needed to go past left end of the table.
+   * Walk to basket time part 2 (facing forward): Time needed to walk to the other end of the table.
+   * Walk to basket time part 3 (facing right): Time needed to walk from the last step to the basket.
  * Game startup delay: Time needed to go from launching the game to reach the start menu and time needed to go from the start menu to gaining control of the player.
  * Basket Dialog input delay: Additional delay on top of base delay for navigating through the egg basket text boxes.
  * Time between basket checks: Time to idle at the basket before checking for eggs.
