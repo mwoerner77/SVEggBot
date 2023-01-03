@@ -21,7 +21,7 @@ Sysbot is required to use this program. For more information on how to install s
 * Right Presses To Recipe: Number of right D-Pad presses required to reach the sandwich recipe (Should only need to be 0 or 1).
 * Down Presses To Recipe: Number of down D-Pad presses required to reach the sandwich recipe.
 * Starting Box #: First of the 3 consecutive empty boxes that eggs from the picnic will populate.
-* # of A Presses at Basket: Number of times the bot will mash the A Button at the basket when collecting eggs.
+* \# of A Presses at Basket: Number of times the bot will mash the A Button at the basket when collecting eggs.
 * Delay Settings (in ms)
  * Base delay for all inputs: Generic delay added to all inputs to give the game more time to open menus and process input. May need to be tweaked depending on connection strength.
  * Open Home Menu delay: Delay for opening the home menu.
